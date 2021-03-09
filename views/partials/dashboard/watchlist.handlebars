@@ -1,3 +1,13 @@
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.23/css/dataTables.bulma.min.css">
+<script src="https://cdn.datatables.net/1.10.23/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.23/js/dataTables.bulma.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#dt-watchlist').DataTable();
+    });
+</script>
+
 <div id="app">
     <nav id="navbar-main" class="navbar is-fixed-top">
         <div class="navbar-brand">
@@ -17,10 +27,10 @@
             <div class="navbar-end">
                 <div class="navbar-item has-dropdown has-dropdown-with-icons has-divider has-user-avatar is-hoverable">
                     <a class="navbar-link is-arrowless">
-                        <div class="is-user-avatar">
-                            <img src="https://avatars.dicebear.com/v2/initials/john-doe.svg" alt="John Doe">
+                        <div class="is-user-avatar icon">
+                            <i class="mdi mdi-face-profile"></i>
                         </div>
-                        <div class="is-user-name"><span>Admin</span></div>
+                        <div class="is-user-name"><span>Administrator</span></div>
                         <span class="icon"><i class="mdi mdi-chevron-down"></i></span>
                     </a>
                     <div class="navbar-dropdown">
@@ -57,13 +67,13 @@
                 <p class="menu-label">General</p>
                 <ul class="menu-list">
                     <li>
-                        <a href="dashboard" class="is-active has-icon">
+                        <a href="dashboard" class="has-icon">
                             <span class="icon"><i class="mdi mdi-desktop-mac"></i></span>
                             <span class="menu-item-label">Summary</span>
                         </a>
                     </li>
                     <li>
-                        <a href="watchlist" class="has-icon">
+                        <a href="watchlist" class="is-active has-icon">
                             <span class="icon"><i class="mdi mdi-google-spreadsheet"></i></span>
                             <span class="menu-item-label">Watchlist</span>
                         </a>
@@ -148,7 +158,7 @@
                 <div class="level-item">
                     <ul>
                         <li>Dashboard</li>
-                        <li>Summary</li>
+                        <li>Watchlist</li>
                     </ul>
                 </div>
             </div>
@@ -160,96 +170,78 @@
         </div>
     </section>
     <section class="section is-main-section">
-        <div class="tile is-ancestor">
-            <div class="tile is-parent">
-                <div class="card is-card-widget tile is-child">
-                    <div class="card-content">
-                        <div class="level is-mobile">
-                            <div class="level-item">
-                                <div class="is-widget-label">
-                                    <h3 class="subtitle is-spaced">Function Unit</h3>
-                                    <h1 class="title">
-                                        85
-                                    </h1>
-                                </div>
-                            </div>
-                            <div class="level-item has-widget-icon">
-                                <div class="is-widget-icon">
-                                    <span class="icon has-text-primary is-large"><i
-                                            class="mdi mdi-account-multiple mdi-48px"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tile is-parent">
-                <div class="card is-card-widget tile is-child">
-                    <div class="card-content">
-                        <div class="level is-mobile">
-                            <div class="level-item">
-                                <div class="is-widget-label">
-                                    <h3 class="subtitle is-spaced">Application</h3>
-                                    <h1 class="title">
-                                        316
-                                    </h1>
-                                </div>
-                            </div>
-                            <div class="level-item has-widget-icon">
-                                <div class="is-widget-icon">
-                                    <span class="icon has-text-info is-large"><i
-                                            class="mdi mdi-application mdi-48px"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tile is-parent">
-                <div class="card is-card-widget tile is-child">
-                    <div class="card-content">
-                        <div class="level is-mobile">
-                            <div class="level-item">
-                                <div class="is-widget-label">
-                                    <h3 class="subtitle is-spaced">Database</h3>
-                                    <h1 class="title">
-                                        308
-                                    </h1>
-                                </div>
-                            </div>
-                            <div class="level-item has-widget-icon">
-                                <div class="is-widget-icon">
-                                    <span class="icon has-text-success is-large"><i
-                                            class="mdi mdi-database mdi-48px"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tile is-parent">
-                <div class="card is-card-widget tile is-child">
-                    <div class="card-content">
-                        <div class="level is-mobile">
-                            <div class="level-item">
-                                <div class="is-widget-label">
-                                    <h3 class="subtitle is-spaced">Expired</h3>
-                                    <h1 class="title">
-                                        12
-                                    </h1>
-                                </div>
-                            </div>
-                            <div class="level-item has-widget-icon">
-                                <div class="is-widget-icon">
-                                    <span class="icon has-text-danger is-large"><i
-                                            class="mdi mdi-bell mdi-48px"></i></span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+
+        <table id="dt-watchlist" class="table is-striped" style="width:100%">
+            <thead>
+                <tr>
+                    <th>No.</th>
+                    <th>Nama</th>
+                    <th>Alamat IP</th>
+                    <th>Jenis</th>
+                    <th>Pemilik</th>
+                    <th>Tanggal Berakhir</th>
+                    <th>Sisa Waktu</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>bristars.bri.co.id</td>
+                    <td>172.18.65.93</td>
+                    <td>Aplikasi</td>
+                    <td>CCP</td>
+                    <td>23 April 2022</td>
+                    <td>1 Tahun 1 Bulan</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>bristars.bri.co.id</td>
+                    <td>172.18.65.60</td>
+                    <td>Database</td>
+                    <td>CCP</td>
+                    <td>23 April 2022</td>
+                    <td>1 Tahun 1 Bulan</td>
+                </tr>
+                <tr>
+                    <td>3</td>
+                    <td>dio.bri.co.id</td>
+                    <td>172.18.65.190</td>
+                    <td>Aplikasi</td>
+                    <td>CCP</td>
+                    <td>25 April 2021</td>
+                    <td>1 Bulan 5 Hari</td>
+                </tr>
+                <tr>
+                    <td>4</td>
+                    <td>dio.bri.co.id</td>
+                    <td>172.18.65.180</td>
+                    <td>Database</td>
+                    <td>CCP</td>
+                    <td>25 April 2021</td>
+                    <td>1 Bulan 5 Hari</td>
+                </tr>
+                <tr>
+                    <td>5</td>
+                    <td>pitung.bri.co.id</td>
+                    <td>172.18.65.102</td>
+                    <td>Aplikasi</td>
+                    <td>CCP</td>
+                    <td>20 Maret 2021</td>
+                    <td>15 Hari</td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <th>No.</th>
+                    <th>Nama</th>
+                    <th>Alamat IP</th>
+                    <th>Jenis</th>
+                    <th>Pemilik</th>
+                    <th>Tanggal Berakhir</th>
+                    <th>Sisa Waktu</th>
+                </tr>
+            </tfoot>
+        </table>
 
     </section>
 
@@ -257,7 +249,7 @@
         <div class="container-fluid">
             <div class="level">
                 <div class="level-left">
-                    
+
                 </div>
                 <div class="level-right">
                     <div class="level-item">

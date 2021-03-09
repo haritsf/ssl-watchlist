@@ -38,7 +38,7 @@ APP.use(function (req, res, next) {
 
 // Views
 // ============================================================
-APP.engine("handlebars", EXPHBS({ defaultLayout: "template" }));
+APP.engine("handlebars", EXPHBS());
 APP.set("view engine", "handlebars");
 APP.set("views", __dirname + "/views/");
 

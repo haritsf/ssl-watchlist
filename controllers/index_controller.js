@@ -1,10 +1,10 @@
-const BURGER = require("../models/burgers.js");
+const burger_model = require("../models/burgers.js");
 exports.index = function (req, res) {
   res.render("index");
 };
 
 exports.burger = function (req, res) {
-  BURGER.all(function (data) {
+  burger_model.all(function (data) {
     var hbsObject = {
       burger: data,
     };
@@ -14,9 +14,13 @@ exports.burger = function (req, res) {
 };
 
 exports.login = function (req, res) {
-  res.render("auth/login");
+  res.render("partials/auth/login");
 };
 
 exports.adminDashboard = function (req, res) {
   res.render("layouts/dashboard");
+};
+
+exports.adminWatchlist = function (req, res) {
+  res.render("partials/dashboard/watchlist");
 };

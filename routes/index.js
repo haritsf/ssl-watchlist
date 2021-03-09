@@ -1,11 +1,12 @@
-const EXPRESS = require("express");
-const ROUTER = EXPRESS.Router();
+const express = require("express");
+const router = express.Router();
 
 const INDEX_CONTROLLER = require("../controllers/index_controller");
 
-ROUTER.get("/", INDEX_CONTROLLER.index);
-ROUTER.get("/burger", INDEX_CONTROLLER.burger);
-ROUTER.get("/login", INDEX_CONTROLLER.login);
-ROUTER.get("/dashboard?", INDEX_CONTROLLER.adminDashboard);
+router.get("/", INDEX_CONTROLLER.index);
+router.get("/burger", INDEX_CONTROLLER.burger);
+router.get("/login", INDEX_CONTROLLER.login);
+router.get("/dashboard", INDEX_CONTROLLER.adminDashboard);
+router.get("/watchlist", INDEX_CONTROLLER.adminWatchlist);
 
-module.exports = ROUTER;
+module.exports = router;
