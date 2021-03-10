@@ -9,7 +9,12 @@
 	<link href="/aragon/js/plugins/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
 	<link href="/aragon/css/argon.min.css?v=1.2.0" rel="stylesheet"  type="text/css">
 	<link href="/assets/global.css" rel="stylesheet"  type="text/css">
+	<script src="/aragon/js/plugins/jquery/dist/jquery.min.js"></script>
 	{{!-- <link type="text/css" href="/aragon/css/argon-dashboard.css" rel="stylesheet"> --}}
+
+	<link rel="stylesheet" type="text/css" href="/aragon/js/plugins/datatables/dataTables.bootstrap4.min.css" />
+	<script type="text/javascript" src="/aragon/js/plugins/datatables/jquery.dataTables.min.js"></script>
+	<script type="text/javascript" src="/aragon/js/plugins/datatables/dataTables.bootstrap4.min.js"></script>
 </head>
 <body>
 	{{#if isLoggedIn}}
@@ -17,7 +22,7 @@
 	{{else}}
 		{{> frontside}}
 	{{/if}}
-	<script src="/aragon/js/plugins/jquery/dist/jquery.min.js"></script>
+	
 	<script src="/aragon/js/plugins/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="/aragon/js/plugins/js-cookie/js.cookie.js"></script>
 	<script src="/aragon/js/plugins/jquery.scrollbar/jquery.scrollbar.min.js"></script>

@@ -86,7 +86,7 @@ const isPasswordHashVerified = (hash, password) => new Promise(async (resolve, r
 
 module.exports = (session) => {
 	const SequelizeStore = require('connect-session-sequelize')(session.Store)
-	
+
 	const SessionStore = new SequelizeStore({
 		db: connection,
 		table: 'Session'

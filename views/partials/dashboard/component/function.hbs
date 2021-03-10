@@ -1,0 +1,52 @@
+<script>
+    $(document).ready(function () {
+        $('#dt-function').DataTable({
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': true
+        });
+    });
+</script>
+
+<div class="card">
+    {{!-- <div class="card-header bg-transparent">
+        <h3 class="mb-0">Icons</h3>
+    </div> --}}
+    <div class="card-body">
+        {{!-- <div class="table-responsive"> --}}
+            <table id="dt-function" class="table align-items-center table-flush" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>No.</th>
+                        <th>Nama</th>
+                        <th>Desc</th>
+                        <th>Div</th>
+                        <th>isGroup</th>
+                        <th>isDTO</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>ISG</td>
+                        <td>IT Strategy & Governance</td>
+                        <td>ISG</td>
+                        <td>0</td>
+                        <td>1</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>APP</td>
+                        <td>Application Management & Operation</td>
+                        <td>APP</td>
+                        <td>0</td>
+                        <td>1</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

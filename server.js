@@ -110,6 +110,10 @@ app.get('/dashboard/summary', authRequired, (req, res) => {
 		stateAct: "active",
 		sub: "General",
 		title: "Summary",
+		user: {
+			name: res.locals.user.username,
+			email: res.locals.user.email
+		}
 	})
 	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
 })
@@ -120,6 +124,10 @@ app.get('/dashboard/icon', authRequired, (req, res) => {
 		stateAct: "active",
 		sub: "General",
 		title: "Icons",
+		user: {
+			name: res.locals.user.username,
+			email: res.locals.user.email
+		}
 	})
 	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
 })
@@ -130,6 +138,31 @@ app.get('/dashboard/watchlist', authRequired, (req, res) => {
 		stateAct: "active",
 		sub: "General",
 		title: "Watchlist",
+		user: {
+			name: res.locals.user.username,
+			email: res.locals.user.email
+		}
+	})
+	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
+})
+
+app.get('/dashboard/function', authRequired, (req, res) => {
+	const Test = async () => {
+		const Group = require('./models/group')
+		const allGroups = await Group.findAll()
+		console.log(allGroups.every(group => group instanceof Group)) // true
+		console.log("All groups:", JSON.stringify(allGroups, null, 2))
+	}
+	Test()
+	res.render('partials/dashboard/component/function', {
+		isIcon: true,
+		stateAct: "active",
+		sub: "Component",
+		title: "Function Unit",
+		user: {
+			name: res.locals.user.username,
+			email: res.locals.user.email
+		}
 	})
 	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
 })
