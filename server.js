@@ -9,7 +9,17 @@ const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const db = require('./config/db')(session)
 
+const sslChecker = require('ssl-checker')
+const getSslDetails = async (hostname) => await sslChecker(hostname)
+sslChecker('google.com', { 
+	method: 'GET',
+	port: 443 }
+	).then(result => console.info(result))
+
 const PORT = process.env.PORT || 4008
+
+// Load Model
+const GroupModel = require('./models/group')
 
 // express app
 const app = express()
@@ -104,16 +114,17 @@ app.get('/home', authRequired, (req, res) => {
 	console.log(`you're at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
 })
 
-app.get('/dashboard/summary', authRequired, (req, res) => {
+app.get('/dashboard/summary', authRequired, async (req, res) => {
+	const countGroups = await GroupModel.count()
 	res.render('partials/dashboard/component/summary', {
 		isSummary: true,
-		stateAct: "active",
 		sub: "General",
 		title: "Summary",
 		user: {
 			name: res.locals.user.username,
 			email: res.locals.user.email
-		}
+		},
+		countGroups: countGroups
 	})
 	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
 })
@@ -121,7 +132,6 @@ app.get('/dashboard/summary', authRequired, (req, res) => {
 app.get('/dashboard/icon', authRequired, (req, res) => {
 	res.render('partials/dashboard/component/icon', {
 		isIcon: true,
-		stateAct: "active",
 		sub: "General",
 		title: "Icons",
 		user: {
@@ -134,8 +144,7 @@ app.get('/dashboard/icon', authRequired, (req, res) => {
 
 app.get('/dashboard/watchlist', authRequired, (req, res) => {
 	res.render('partials/dashboard/component/watchlist', {
-		isIcon: true,
-		stateAct: "active",
+		isWatchlist: true,
 		sub: "General",
 		title: "Watchlist",
 		user: {
@@ -146,25 +155,21 @@ app.get('/dashboard/watchlist', authRequired, (req, res) => {
 	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
 })
 
-app.get('/dashboard/function', authRequired, (req, res) => {
-	const Test = async () => {
-		const Group = require('./models/group')
-		const allGroups = await Group.findAll()
-		console.log(allGroups.every(group => group instanceof Group)) // true
-		console.log("All groups:", JSON.stringify(allGroups, null, 2))
-	}
-	Test()
+app.get('/dashboard/function', authRequired, async (req, res) => {
+	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
+	
+	const allGroups = await GroupModel.findAll()
 	res.render('partials/dashboard/component/function', {
-		isIcon: true,
+		isFunction: true,
 		stateAct: "active",
 		sub: "Component",
 		title: "Function Unit",
 		user: {
 			name: res.locals.user.username,
 			email: res.locals.user.email
-		}
+		},
+		allGroups: allGroups
 	})
-	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
 })
 
 app.all('/login', (req, res, next) => {

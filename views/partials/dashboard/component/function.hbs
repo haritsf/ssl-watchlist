@@ -29,22 +29,16 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {{#each allGroups}}
                     <tr>
-                        <td>1</td>
-                        <td>ISG</td>
-                        <td>IT Strategy & Governance</td>
-                        <td>ISG</td>
-                        <td>0</td>
-                        <td>1</td>
+                        <td>{{dataValues.id}}</td>
+                        <td>{{dataValues.group_abbr}}</td>
+                        <td>{{dataValues.group_full}}</td>
+                        <td>{{dataValues.group_div}}</td>
+                        <td>{{dataValues.group_is_group}}</td>
+                        <td>{{dataValues.group_is_dto}}</td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>APP</td>
-                        <td>Application Management & Operation</td>
-                        <td>APP</td>
-                        <td>0</td>
-                        <td>1</td>
-                    </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </div>

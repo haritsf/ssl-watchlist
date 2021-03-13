@@ -15,13 +15,13 @@
                 </h6>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link {{#if isSummary}} {{stateAct}} {{/if}}" href="./summary">
+                        <a class="nav-link {{#if isSummary}} text-orange {{/if}}" href="./summary">
                             <i class="ni ni-tv-2"></i>
                             <span class="nav-link-text">Summary</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./watchlist">
+                        <a class="nav-link {{#if isWatchlist}} text-orange {{/if}}" href="./watchlist">
                             <i class="ni ni-credit-card"></i>
                             <span class="nav-link-text">Watchlist</span>
                         </a>
@@ -54,7 +54,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="./function">
+                        <a class="nav-link {{#if isFunction}} text-orange {{/if}}" href="./function">
                             <i class="ni ni-ui-04"></i>
                             <span class="nav-link-text">Function Unit</span>
                         </a>
