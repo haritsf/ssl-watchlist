@@ -16,31 +16,43 @@
         <h3 class="mb-0">Icons</h3>
     </div> --}}
     <div class="card-body">
-        {{!-- <div class="table-responsive"> --}}
             <table id="dt-function" class="table align-items-center table-flush" style="width:100%">
                 <thead>
                     <tr>
-                        <th>No.</th>
-                        <th>Nama</th>
-                        <th>Desc</th>
-                        <th>Div</th>
-                        <th>isGroup</th>
-                        <th>isDTO</th>
+                        <th><center>No.</center></th>
+                        <th><center>Nama</center></th>
+                        <th><center>Desc</center></th>
+                        <th><center>Div</center></th>
+                        <th><center>isGroup</center></th>
+                        <th><center>isDTO</center></th>
                     </tr>
                 </thead>
                 <tbody>
                     {{#each allGroups}}
                     <tr>
-                        <td>{{dataValues.id}}</td>
-                        <td>{{dataValues.group_abbr}}</td>
+                        <td><center>{{dataValues.id}}</center></td>
+                        <td><center>{{dataValues.group_abbr}}</center></td>
                         <td>{{dataValues.group_full}}</td>
-                        <td>{{dataValues.group_div}}</td>
-                        <td>{{dataValues.group_is_group}}</td>
-                        <td>{{dataValues.group_is_dto}}</td>
+                        <td><center>{{dataValues.group_div}}</center></td>
+                        <td><center>
+                            {{#ifCond dataValues.group_is_group '0'}}
+                                <span class="badge badge-pill badge-info">Div</span>
+                            {{else}}
+                                <span class="badge badge-pill badge-default">Group/Team</span>
+                            {{/ifCond}}
+                            </center>
+                        </td>
+                        <td><center>
+                            {{#ifCond dataValues.group_is_dto '0'}}
+                                <span class="badge badge-pill badge-warning">Non DTO</span>
+                            {{else}}
+                                <span class="badge badge-pill badge-secondary">DTO</span>
+                            {{/ifCond}}
+                            </center>
+                        </td>
                     </tr>
                     {{/each}}
                 </tbody>
             </table>
-        </div>
     </div>
 </div>

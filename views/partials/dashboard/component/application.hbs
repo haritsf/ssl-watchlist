@@ -1,0 +1,72 @@
+<script type="text/javascript">
+    $(document).ready(function () {
+        var table
+        $('#dt-application').DataTable({
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': true,
+            'scrollX': true
+        })
+    })
+</script>
+
+<div class="card">
+    {{#if hasSSL}}
+    {{!-- <div class="card-header bg-transparent"> --}}
+        <div class="alert alert-default alert-dismissible fade show" style="margin-bottom: 0" role="alert">
+            SSL Domain <b>{{namaDomain}}</b> memiliki sisa <b>{{hasilSSL.daysRemaining}}</b> hari dari tanggal <b>{{dariTanggal}}</b> sampai tanggal <b>{{sampaiTanggal}}</b>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    {{!-- </div> --}}
+    {{/if}}
+    <div class="card-body">
+            <table id="dt-application" class="table align-items-center table-flush" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th><center>No.</center></th>
+                        <th><center>Function</center></th>
+                        <th><center>Domain</center></th>
+                        <th><center>IP Address</center></th>
+                        <th><center>Tipe</center></th>
+                        <th><center>SSL</center></th>
+                        <th><center>Status</center></th>
+                        <th><center>Remain</center></th>
+                        {{!-- <th><center>Valid</center></th> --}}
+                        <th><center>From Date</center></th>
+                        <th><center>To Date</center></th>
+                        <th><center>Get</center></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each allProducts}}
+                    <tr>
+                        <td id="dataID{{dataValues.id}}"><center>{{dataValues.id}}</center></td>
+                        <td><center>{{dataValues.Group.dataValues.group_abbr}}</center></td>
+                        <td><center>{{dataValues.domain}}</center></td>
+                        <td><center>{{dataValues.ip_address}}</center></td>
+                        <td><center>{{dataValues.type_product}}</center></td>
+                        <td><center>{{dataValues.type_ssl}}</center></td>
+                        <td><center>{{dataValues.status}}</center></td>
+                        <td><center>{{dataValues.days_remain}}</center></td>
+                        {{!-- <td><center>{{dataValues.valid}}</center></td> --}}
+                        <td><center>{{dataValues.valid_from}}</center></td>
+                        <td><center>{{dataValues.valid_to}}</center></td>
+                        <td><center>
+                            <a id="triggerBtn" type="button" href="?getSSL={{dataValues.id}}"><i class="fa fa-dot-circle"></i></a>
+                            </center>
+                        </td>
+                        {{!-- <td><center>
+                            <a type="button" href="./application/details/{{dataValues.id}}">Details</a>
+                            </center>
+                        </td> --}}
+                    </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+    </div>
+</div>

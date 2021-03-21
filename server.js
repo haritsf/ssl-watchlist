@@ -11,21 +11,46 @@ const db = require('./config/db')(session)
 
 const sslChecker = require('ssl-checker')
 const getSslDetails = async (hostname) => await sslChecker(hostname)
-sslChecker('google.com', { 
-	method: 'GET',
-	port: 443 }
-	).then(result => console.info(result))
+// try {
+//   sslChecker("bribook.bri.co.id", {
+//     method: "GET",
+//     port: 443,
+//   }).then((result) => console.info(result))
+// } catch (error) {
+//   console.error(error)
+// }
 
 const PORT = process.env.PORT || 4008
 
 // Load Model
 const GroupModel = require('./models/group')
+const ProductModel = require('./models/product')
+const product = require('./models/product')
+GroupModel.hasMany(ProductModel, {foreignKey: 'id_function'})
+ProductModel.belongsTo(GroupModel, {foreignKey: 'id_function'})
+
+const getPagination = (page, size) => {
+	// default data per page
+	const limit = size ? +size : 5
+	const offset = page ? page * limit : 0
+
+	return { limit, offset }
+}
+
+const getPagingData = (data, page, limit) => {
+	const { count: totalItems, rows: rows } = data
+	const currentPage = page ? +page : 0
+	const totalPages = Math.ceil(totalItems / limit)
+
+	return { totalItems, rows, totalPages, currentPage }
+}
 
 // express app
 const app = express()
 app.set('view engine', 'hbs')
 app.engine('hbs', hbs({
 	extname: 'hbs',
+	helpers: require('./config/helpers'),
 	defaultView: 'default',
 	layoutsDir: __dirname + '/views/layouts/',
 	partialsDir: __dirname + '/views/partials/'
@@ -116,6 +141,7 @@ app.get('/home', authRequired, (req, res) => {
 
 app.get('/dashboard/summary', authRequired, async (req, res) => {
 	const countGroups = await GroupModel.count()
+	const countApps = await ProductModel.count()
 	res.render('partials/dashboard/component/summary', {
 		isSummary: true,
 		sub: "General",
@@ -124,7 +150,10 @@ app.get('/dashboard/summary', authRequired, async (req, res) => {
 			name: res.locals.user.username,
 			email: res.locals.user.email
 		},
-		countGroups: countGroups
+		countGroups: countGroups,
+		countApps: countApps,
+		countOngo: Math.floor(Math.random() * 101),
+		countWarn: Math.floor(Math.random() * 101)
 	})
 	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
 })
@@ -157,11 +186,24 @@ app.get('/dashboard/watchlist', authRequired, (req, res) => {
 
 app.get('/dashboard/function', authRequired, async (req, res) => {
 	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
-	
+
+	// const { page, size, title } = req.query
+	// var condition = title ? { title: { [Op.like]: `%${title}%` } } : null
+
+	// const { limit, offset } = getPagination(page, size)
+
+	// const allGroups = await GroupModel.findAndCountAll({ where: condition, limit, offset }).then(result => {
+	// 	const response = getPagingData(result, page, limit)
+	// 	console.info(response)
+	// 	return response
+	// }).catch(err => {
+	// 	res.status(500).send(console.error('Error Bouss'))
+	// })
+
 	const allGroups = await GroupModel.findAll()
+
 	res.render('partials/dashboard/component/function', {
 		isFunction: true,
-		stateAct: "active",
 		sub: "Component",
 		title: "Function Unit",
 		user: {
@@ -170,6 +212,74 @@ app.get('/dashboard/function', authRequired, async (req, res) => {
 		},
 		allGroups: allGroups
 	})
+})
+
+app.get('/dashboard/application', authRequired, async (req, res) => {
+	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
+
+	const joinProduct = await ProductModel.findAll({
+		include: [{
+			model: GroupModel,
+			required: true
+		}]
+	}).then(groups => {
+		return groups
+	})
+
+	if (req.query.getSSL) {
+		const productByID = await ProductModel.findByPk(parseInt(req.query.getSSL)).then(results => {
+			return results
+		})
+
+		const getSSL = await sslChecker(productByID.domain, {
+			method: "GET",
+			port: 443,
+		}).then((result) => {
+			return result
+		})
+
+		dateFrom = new Date(getSSL.validFrom)
+		dateFrom = dateFrom.getDate()+' - ' + (dateFrom.getMonth()+1) + ' - '+dateFrom.getFullYear()
+		dateTo = new Date(getSSL.validTo)
+		dateTo = dateTo.getDate()+' - ' + (dateTo.getMonth()+1) + ' - '+dateTo.getFullYear()
+
+		res.render('partials/dashboard/component/application', {
+			isApplication: true,
+			sub: "Component",
+			title: "Application",
+			user: {
+				name: res.locals.user.username,
+				email: res.locals.user.email
+			},
+			allProducts: joinProduct,
+			hasSSL: true,
+			hasilSSL: getSSL,
+			dariTanggal: dateFrom,
+			sampaiTanggal: dateTo,
+			namaDomain: productByID.domain
+		})
+	} else {
+		res.render('partials/dashboard/component/application', {
+			isApplication: true,
+			sub: "Component",
+			title: "Application",
+			user: {
+				name: res.locals.user.username,
+				email: res.locals.user.email
+			},
+			allProducts: joinProduct,
+			hasSSL: false
+		})
+	}
+})
+
+app.get('/dashboard/application/details/:appID', authRequired, async (req, res) => {
+	console.log(`Parameternya: ${req.params.appID}`)
+	const productByID = await ProductModel.findByPk(parseInt(req.params.appID)).then(results => {
+		return results
+	})
+	console.log(productByID)
+	res.render('partials/dashboard/component/application-details')
 })
 
 app.all('/login', (req, res, next) => {
@@ -190,7 +300,7 @@ app.all('/login', (req, res, next) => {
 		.then(user => new Promise((resolve, reject) => {
 			req.login(user, err => { // save authentication
 				if (err) return reject(err)
-				return res.send('<script>location.href="/dashboard/summary";</script>')
+				return res.send('<script>location.href="/dashboard/summary"</script>')
 			})
 		}))
 		.catch(error => {
@@ -294,7 +404,7 @@ app.all('/register', (req, res) => {
 app.get('/logout', authRequired, (req, res) => {
 	req.logout()
 	console.log('Last User has been Ejected')
-	return res.send('<script>location.href="/";</script>')
+	return res.send('<script>location.href="/"</script>')
 })
 
 // App start
