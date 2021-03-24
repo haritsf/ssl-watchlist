@@ -8,6 +8,7 @@ const helmet = require('helmet')
 const passport = require('passport')
 const LocalStrategy = require('passport-local').Strategy
 const db = require('./config/db')(session)
+const { Op } = require('sequelize')
 
 const sslChecker = require('ssl-checker')
 const getSslDetails = async (hostname) => await sslChecker(hostname)
@@ -142,6 +143,14 @@ app.get('/home', authRequired, (req, res) => {
 app.get('/dashboard/summary', authRequired, async (req, res) => {
 	const countGroups = await GroupModel.count()
 	const countApps = await ProductModel.count()
+	const countWarn = await ProductModel.count({
+		where: {
+			days_remain: {
+				[Op.lte]: 120
+			}
+		}
+	})
+
 	res.render('partials/dashboard/component/summary', {
 		isSummary: true,
 		sub: "General",
@@ -153,25 +162,26 @@ app.get('/dashboard/summary', authRequired, async (req, res) => {
 		countGroups: countGroups,
 		countApps: countApps,
 		countOngo: Math.floor(Math.random() * 101),
-		countWarn: Math.floor(Math.random() * 101)
+		countWarn: countWarn,
 	})
 	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
 })
 
-app.get('/dashboard/icon', authRequired, (req, res) => {
-	res.render('partials/dashboard/component/icon', {
-		isIcon: true,
-		sub: "General",
-		title: "Icons",
-		user: {
-			name: res.locals.user.username,
-			email: res.locals.user.email
+app.get('/dashboard/watchlist', authRequired, async (req, res) => {
+	const joinProduct = await ProductModel.findAll({
+		include: [{
+			model: GroupModel,
+			required: true
+		}],
+		where: {
+			days_remain: {
+				[Op.lte]: 120
+			}
 		}
+	}).then(products => {
+		return products
 	})
-	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
-})
 
-app.get('/dashboard/watchlist', authRequired, (req, res) => {
 	res.render('partials/dashboard/component/watchlist', {
 		isWatchlist: true,
 		sub: "General",
@@ -179,7 +189,8 @@ app.get('/dashboard/watchlist', authRequired, (req, res) => {
 		user: {
 			name: res.locals.user.username,
 			email: res.locals.user.email
-		}
+		},
+		allProducts: joinProduct
 	})
 	console.log(`username ${req.user.username} at ${req.protocol}://${req.get('host')}${req.originalUrl}`)
 })
@@ -234,14 +245,19 @@ app.get('/dashboard/application', authRequired, async (req, res) => {
 		const getSSL = await sslChecker(productByID.domain, {
 			method: "GET",
 			port: 443,
-		}).then((result) => {
+		}).then(async (result) => {
+			productByID.days_remain = result.daysRemaining
+			productByID.valid_from = new Date(result.validFrom)
+			productByID.valid_to = new Date(result.validTo)
+			productByID.updatedAt = new Date()
+			await productByID.save()
 			return result
+		}).catch(error => {
+			res.redirect('back')
 		})
 
-		dateFrom = new Date(getSSL.validFrom)
-		dateFrom = dateFrom.getDate()+' - ' + (dateFrom.getMonth()+1) + ' - '+dateFrom.getFullYear()
-		dateTo = new Date(getSSL.validTo)
-		dateTo = dateTo.getDate()+' - ' + (dateTo.getMonth()+1) + ' - '+dateTo.getFullYear()
+		dateFrom = new Date(getSSL.validFrom).toLocaleString('id-ID')
+		dateTo = new Date(getSSL.validTo).toLocaleString('id-ID')
 
 		res.render('partials/dashboard/component/application', {
 			isApplication: true,
@@ -271,6 +287,27 @@ app.get('/dashboard/application', authRequired, async (req, res) => {
 			hasSSL: false
 		})
 	}
+})
+
+app.put('/dashboard/application/push/:appID', authRequired, async (req, res, next) => {
+	console.log(`Parameternya: ${req.params.appID}`)
+	const productByID = ProductModel.findByPk(parseInt(req.params.appID)).then(results => {
+		return results
+	}).then(async results => {
+		const getSSL = await sslChecker(results.domain, {
+			method: "GET",
+			port: 443,
+		}).then(async data => {
+			const pushSSL = await ProductModel.update({
+				days_remain: data.daysRemaining,
+				valid_from: data.validFrom,
+				valid_to: data.validTo,
+				updatedAt: new Date()
+			})
+		})
+	}).catch(error => {
+		console.log(error)
+	})
 })
 
 app.get('/dashboard/application/details/:appID', authRequired, async (req, res) => {

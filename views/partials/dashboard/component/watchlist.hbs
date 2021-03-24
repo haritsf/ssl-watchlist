@@ -19,61 +19,27 @@
         <table id="dt-watchlist" class="table align-items-center table-flush" style="width:100%">
             <thead>
                 <tr>
-                    <th>No.</th>
-                    <th>Nama</th>
-                    <th>Alamat IP</th>
-                    <th>Jenis</th>
-                    <th>Pemilik</th>
-                    <th>Tanggal Berakhir</th>
-                    <th>Sisa Waktu</th>
+                    <th><center>No.</center></th>
+                    <th><center>Nama</center></th>
+                    <th><center>Alamat IP</center></th>
+                    <th><center>Jenis</center></th>
+                    <th><center>Pemilik</center></th>
+                    <th><center>Tanggal Berakhir</center></th>
+                    <th><center>Sisa Waktu</center></th>
                 </tr>
             </thead>
             <tbody>
+                {{#each allProducts}}
                 <tr>
-                    <td>1</td>
-                    <td>bristars.bri.co.id</td>
-                    <td>172.18.65.93</td>
-                    <td>Aplikasi</td>
-                    <td>CCP</td>
-                    <td>23 April 2022</td>
-                    <td>1 Tahun 1 Bulan</td>
+                   <td><center>{{dataValues.id}}</center></td>
+                   <td><center>{{dataValues.domain}}</center></td>
+                   <td><center>{{dataValues.ip_address}}</center></td>
+                   <td><center>{{dataValues.type_product}}</center></td>
+                   <td><center>{{dataValues.Group.dataValues.group_abbr}}</center></td>
+                   <td style="text-align: right">{{#convertTime dataValues.valid_to}}{{/convertTime}}</td>
+                   <td style="text-align: right">{{#checkRemain dataValues.days_remain}}{{/checkRemain}}</td>
                 </tr>
-                <tr>
-                    <td>2</td>
-                    <td>bristars.bri.co.id</td>
-                    <td>172.18.65.60</td>
-                    <td>Database</td>
-                    <td>CCP</td>
-                    <td>23 April 2022</td>
-                    <td>1 Tahun 1 Bulan</td>
-                </tr>
-                <tr>
-                    <td>3</td>
-                    <td>dio.bri.co.id</td>
-                    <td>172.18.65.190</td>
-                    <td>Aplikasi</td>
-                    <td>CCP</td>
-                    <td>25 April 2021</td>
-                    <td>1 Bulan 5 Hari</td>
-                </tr>
-                <tr>
-                    <td>4</td>
-                    <td>dio.bri.co.id</td>
-                    <td>172.18.65.180</td>
-                    <td>Database</td>
-                    <td>CCP</td>
-                    <td>25 April 2021</td>
-                    <td>1 Bulan 5 Hari</td>
-                </tr>
-                <tr>
-                    <td>5</td>
-                    <td>pitung.bri.co.id</td>
-                    <td>172.18.65.102</td>
-                    <td>Aplikasi</td>
-                    <td>CCP</td>
-                    <td>20 Maret 2021</td>
-                    <td>15 Hari</td>
-                </tr>
+                {{/each}}
             </tbody>
         </table>
     </div>

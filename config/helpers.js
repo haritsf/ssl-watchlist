@@ -1,3 +1,5 @@
+const moment = require('moment');
+
 module.exports = {
   ifCond: function (a, b, options) {
     if (a === b) {
@@ -5,7 +7,15 @@ module.exports = {
     }
     return options.inverse(this);
   },
-  bar: function () {
-    return "BAR!";
+  checkRemain: function (remain) {
+    if (remain !== null) {
+      return `${remain} Hari`
+    }
   },
+  convertTime: function (date) {
+    if (date) {
+      let mmnt = moment(date)
+      return mmnt.format('DD MMMM YYYY, hh:mm:ss')
+    }
+  }
 };

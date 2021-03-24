@@ -43,10 +43,10 @@ module.exports = {
       },
       valid_from: {
         allowNull: true,
-        type: Sequelize.TIME
+        type: Sequelize.DATE
       },
       valid_to: {
-        type: Sequelize.TIME
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
