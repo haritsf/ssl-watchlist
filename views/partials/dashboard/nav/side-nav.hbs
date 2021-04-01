@@ -15,23 +15,17 @@
                 </h6>
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link {{#if isSummary}} text-orange {{/if}}" href="./summary">
+                        <a class="nav-link {{#if isSummary}} text-orange {{/if}}" href="{{baseUrl}}/summary">
                             <i class="ni ni-tv-2"></i>
                             <span class="nav-link-text">Summary</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {{#if isWatchlist}} text-orange {{/if}}" href="./watchlist">
+                        <a class="nav-link {{#if isWatchlist}} text-orange {{/if}}" href="#">
                             <i class="ni ni-credit-card"></i>
-                            <span class="nav-link-text">Watchlist</span>
+                            <span class="nav-link-text">Watchlist Reminder</span>
                         </a>
                     </li>
-                    {{!-- <li class="nav-item">
-                        <a class="nav-link {{#if isIcon}} {{stateAct}} {{/if}}" href="./icon">
-                            <i class="ni ni-planet text-orange"></i>
-                            <span class="nav-link-text">Icons</span>
-                        </a>
-                    </li> --}}
                 </ul>
                 <!-- Divider -->
                 <hr class="my-3" />
@@ -42,19 +36,19 @@
                 <!-- Navigation -->
                 <ul class="navbar-nav mb-md-3">
                     <li class="nav-item">
-                        <a class="nav-link {{#if isApplication}} text-orange {{/if}}" href="./application">
+                        <a class="nav-link {{#if isApplication}} text-orange {{/if}}" href="{{baseUrl}}/application">
                             <i class="ni ni-spaceship"></i>
-                            <span class="nav-link-text">Application</span>
+                            <span class="nav-link-text">All App</span>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    {{!-- <li class="nav-item">
                         <a class="nav-link" href="#">
                             <i class="ni ni-palette"></i>
                             <span class="nav-link-text">Database</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item">
-                        <a class="nav-link {{#if isFunction}} text-orange {{/if}}" href="./function">
+                        <a class="nav-link {{#if isFunction}} text-orange {{/if}}" href="{{baseUrl}}/function">
                             <i class="ni ni-ui-04"></i>
                             <span class="nav-link-text">Function Unit</span>
                         </a>

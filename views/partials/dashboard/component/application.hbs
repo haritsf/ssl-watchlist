@@ -8,64 +8,72 @@
             'ordering': true,
             'info': true,
             'autoWidth': true,
-            'scrollX': true
+            'scrollX': false
         })
     })
 </script>
 
 <div class="card">
     {{#if hasSSL}}
-        <div class="alert alert-default alert-dismissible fade show" style="margin-bottom: 0" role="alert">
-            SSL Domain <b>{{namaDomain}}</b> memiliki sisa <b>{{hasilSSL.daysRemaining}}</b> hari dari tanggal <b>{{dariTanggal}}</b> sampai tanggal <b>{{sampaiTanggal}}</b>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
+    <div class="alert alert-default alert-dismissible fade show" style="margin-bottom: 0" role="alert">
+        SSL Domain <b>{{namaDomain}}</b> memiliki sisa <b>{{hasilSSL.daysRemaining}}</b> hari dari tanggal
+        <b>{{dariTanggal}}</b> sampai tanggal <b>{{sampaiTanggal}}</b>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     {{/if}}
     <div class="card-body">
-            <table id="dt-application" class="table align-items-center table-flush" cellspacing="0" width="100%">
-                <thead>
-                    <tr>
-                        <th><center>No.</center></th>
-                        <th><center>Function</center></th>
-                        <th><center>Domain/IP Address</center></th>
-                        <th><center>SSL</center></th>
-                        <th><center>Status</center></th>
-                        <th><center>Remain</center></th>
-                        <th><center>Date</center></th>
-                        <th><center>Opt</center></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each allProducts}}
-                    <tr>
-                        <td><center>{{dataValues.id}}</center></td>
-                        <td><center>{{dataValues.Group.dataValues.group_abbr}}</center></td>
-                        <td style="text-align: left">
-                            {{dataValues.domain}}</br>
-                            {{dataValues.ip_address}}
-                        </td>
-                        <td><center>{{dataValues.type_ssl}}</center></td>
-                        <td><center>{{dataValues.status}}</center></td>
-                        <td style="text-align: right">{{#checkRemain dataValues.days_remain}}{{/checkRemain}}</td>
-                        <td style="text-align: right">
-                            {{#convertTime dataValues.valid_from}}{{/convertTime}}</br>
-                            {{#convertTime dataValues.valid_to}}{{/convertTime}}
-                        </td>
-                        <td><center>
-                            <a type="button" href="?getSSL={{dataValues.id}}"><i class="fa fa-dot-circle"></i></a>
-                            </center>
-                        </td>
-                        {{!-- <td><center>
-                            <form action="./application/push/{{dataValues.id}}" method="POST">
-                            <a type="button" href="./application/push/{{dataValues.id}}">Details</a>
-                            <button type="submit" class="btn btn-primary btn-block mt-5">Push</button>
-                            </center>
-                            </form>
-                        </td> --}}
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+        <div class="table-responsive">
+        <table id="dt-application" class="table align-items-center" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th><center>No.</center></th>
+                    <th><center>Function</center></th>
+                    <th><center>Domain/IP Address</center></th>
+                    <th><center>SSL</center></th>
+                    <th><center>Status</center></th>
+                    <th><center>Remain</center></th>
+                    <th><center>Date</center></th>
+                    {{!-- <th><center>Opt</center></th> --}}
+                </tr>
+            </thead>
+            <tbody>
+                {{#each allProducts}}
+                <tr>
+                    <td><center>{{dataValues.id}}</center>
+                    </td>
+                    <td><center>{{dataValues.Group.dataValues.group_abbr}}</center>
+                    </td>
+                    <td style="text-align: left">
+                        {{dataValues.domain}}</br>
+                        {{dataValues.ip_address}}
+                    </td>
+                    <td><center>{{dataValues.type_ssl}}</center>
+                    </td>
+                    <td><center>
+                            {{#elseIfCond dataValues.status 'Expired'}}
+                            <span class="badge badge-pill badge-danger">{{dataValues.status}}</span>
+                            {{else elseIfCond dataValues.status 'Updated'}}
+                            <span class="badge badge-pill badge-success">{{dataValues.status}}</span>
+                            {{else}}
+                            <span class="badge badge-pill badge-warning">{{dataValues.status}}</span>
+                            {{/elseIfCond}}
+                        </center>
+                    </td>
+                    <td style="text-align: right"><b>{{hitung_hari}} Hari</b></td>
+                    <td style="text-align: right">
+                        {{#convertTime dataValues.valid_from}}{{/convertTime}}</br>
+                        {{#convertTime dataValues.valid_to}}{{/convertTime}}
+                    </td>
+                    {{!-- <td>
+                        <a type="button" href="/dashboard/application/{{dataValues.id}}"
+                            class="btn btn-sm btn-primary">Detail</a>
+                    </td> --}}
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        </div>
     </div>
 </div>

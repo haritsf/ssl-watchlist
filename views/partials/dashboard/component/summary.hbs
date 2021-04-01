@@ -1,3 +1,16 @@
+<script>
+    $(document).ready(function () {
+        $('#dt-watchlist').DataTable({
+            'paging': true,
+            'lengthChange': true,
+            'searching': true,
+            'ordering': true,
+            'info': true,
+            'autoWidth': true
+        });
+    });
+</script>
+
 <div class="row">
     <div class="col-xl-6 col-md-6">
         <div class="card">
@@ -107,6 +120,56 @@
                         </p> --}}
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col">
+        <div class="card">
+            <div class="card-body">
+                <table id="dt-watchlist" class="table align-items-center table-flush" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th><center>No.</center></th>
+                            <th><center>Nama</center></th>
+                            <th><center>Fungsi</center></th>
+                            <th><center>Alamat IP</center></th>
+                            <th><center>Jenis</center></th>
+                            <th><center>Status</center></th>
+                            <th><center>Tanggal Berakhir</center></th>
+                            <th><center>Sisa Waktu</center></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#each allProducts.rows}}
+                        {{#belowCond hitung_hari 30}}
+                        <tr>
+                            <td><center>{{dataValues.id}}</center></td>
+                            <td><center>{{dataValues.domain}}</center></td>
+                            <td><center>{{dataValues.Group.dataValues.group_abbr}}</center></td>
+                            <td><center>{{dataValues.ip_address}}</center></td>
+                            <td><center>{{dataValues.type_product}}</center></td>
+                            <td>
+                                <center>
+                                <span class="badge badge-pill badge-danger">Expired</span>
+                                {{!-- {{#elseIfCond dataValues.status 'Expired'}}
+                                <span class="badge badge-pill badge-danger">{{dataValues.status}}</span>
+                                {{else elseIfCond dataValues.status 'Updated'}}
+                                <span class="badge badge-pill badge-success">{{dataValues.status}}</span>
+                                {{else}}
+                                <span class="badge badge-pill badge-warning">{{dataValues.status}}</span>
+                                {{/elseIfCond}} --}}
+                                </center>
+                            </td>
+                            <td style="text-align: right"><b>{{#convertTime dataValues.valid_to}}{{/convertTime}}</b></td>
+                            <td style="text-align: right"><b>{{hitung_hari}} Hari</b></td>
+                        </tr>
+                        {{/belowCond}}
+                        {{/each}}
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

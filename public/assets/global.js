@@ -139,7 +139,7 @@ let randCol =
     })("")
 
 $(document).ready(function () {
-    console.clear()
+    // console.clear()
     let arrChart = []
     let dumpNum
     for (let x = 1; x <= 12; x++) {
@@ -147,9 +147,11 @@ $(document).ready(function () {
         arrChart.push(dumpNum)
     }
 
-    console.log(arrChart)
+    // console.log(arrChart)
 
-    let ctx = document.getElementById('chart').getContext('2d')
+    let ctx = document.getElementById('chart')
+    if (ctx) {
+    ctx.getContext('2d')
     let myChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -198,4 +200,6 @@ $(document).ready(function () {
             }
         }
     })
+}
+
 })
