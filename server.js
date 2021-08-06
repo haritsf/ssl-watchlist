@@ -104,6 +104,15 @@ passport.deserializeUser((uid, cb) => {
 		})
 })
 
+// try {
+//   sslChecker("bricard.bri.co.id", {
+//     method: "GET",
+//     port: 443,
+//   }).then((result) => console.info(result))
+// } catch (error) {
+//   console.error(error)
+// }
+
 /* Routes */
 
 app.get('/', (req, res) => {
@@ -123,14 +132,14 @@ app.get('/dashboard/summary', authRequired, async (req, res) => {
 	const countOngo = await ProductModel.count({
 		where: {
 			days_remain: {
-				[Op.gt]: 30
+				[Op.gt]: 60
 			}
 		}
 	})
 	const countWarn = await ProductModel.count({
 		where: {
 			days_remain: {
-				[Op.lte]: 30
+				[Op.lte]: 60
 			}
 		}
 	})
@@ -174,7 +183,7 @@ app.get('/dashboard/watchlist', authRequired, async (req, res) => {
 		}],
 		where: {
 			days_remain: {
-				[Op.lte]: 30
+				[Op.lte]: 60
 			}
 		}
 	}).then(products => {
