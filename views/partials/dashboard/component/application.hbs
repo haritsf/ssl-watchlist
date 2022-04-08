@@ -35,7 +35,7 @@
                     <th><center>Status</center></th>
                     <th><center>Remain</center></th>
                     <th><center>Date</center></th>
-                    {{!-- <th><center>Opt</center></th> --}}
+                    <th><center>Opt</center></th>
                 </tr>
             </thead>
             <tbody>
@@ -66,10 +66,10 @@
                         {{#convertTime dataValues.valid_from}}{{/convertTime}}</br>
                         {{#convertTime dataValues.valid_to}}{{/convertTime}}
                     </td>
-                    {{!-- <td>
+                    <td>
                         <a type="button" href="/dashboard/application/{{dataValues.id}}"
                             class="btn btn-sm btn-primary">Detail</a>
-                    </td> --}}
+                    </td>
                 </tr>
                 {{/each}}
             </tbody>
