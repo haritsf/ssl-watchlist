@@ -1,5 +1,5 @@
 <script>
-    $(document).ready(function () {
+  $(document).ready(function () {
         $('#dt-watchlist').DataTable({
             'paging': true,
             'lengthChange': true,
@@ -12,32 +12,89 @@
 </script>
 
 <div class="card">
-    <div class="card-body">
-        <table id="dt-watchlist" class="table align-items-center table-flush" style="width:100%">
-            <thead>
-                <tr>
-                    <th><center>No.</center></th>
-                    <th><center>Nama</center></th>
-                    <th><center>Alamat IP</center></th>
-                    <th><center>Jenis</center></th>
-                    <th><center>Fungsi</center></th>
-                    <th><center>Tanggal Berakhir</center></th>
-                    <th><center>Sisa Waktu</center></th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each allProducts}}
-                <tr>
-                   <td><center>{{dataValues.id}}</center></td>
-                   <td><center>{{dataValues.domain}}</center></td>
-                   <td><center>{{dataValues.ip_address}}</center></td>
-                   <td><center>{{dataValues.type_product}}</center></td>
-                   <td><center>{{dataValues.Group.dataValues.group_abbr}}</center></td>
-                   <td style="text-align: right">{{#convertTime dataValues.valid_to}}{{/convertTime}}<></td>
-                   <td style="text-align: right">{{#remainDays dataValues.valid_to}}{{/remainDays}} Hari</td>
-                </tr>
-                {{/each}}
-            </tbody>
-        </table>
-    </div>
+  <div class="card-body">
+    <table
+      id="dt-watchlist"
+      class="table align-items-center table-flush"
+      style="width:100%"
+    >
+      <thead>
+        <tr>
+          <th>
+            <center>
+              No.
+            </center>
+          </th>
+          <th>
+            <center>
+              Nama
+            </center>
+          </th>
+          <th>
+            <center>
+              Alamat IP
+            </center>
+          </th>
+          <th>
+            <center>
+              Jenis
+            </center>
+          </th>
+          <th>
+            <center>
+              Fungsi
+            </center>
+          </th>
+          <th>
+            <center>
+              Tanggal Berakhir
+            </center>
+          </th>
+          <th>
+            <center>
+              Sisa Waktu
+            </center>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each allProducts}}
+          <tr>
+            <td>
+              <center>
+                {{dataValues.id}}
+              </center>
+            </td>
+            <td>
+              <center>
+                {{dataValues.domain}}
+              </center>
+            </td>
+            <td>
+              <center>
+                {{dataValues.ip_address}}
+              </center>
+            </td>
+            <td>
+              <center>
+                {{dataValues.type_product}}
+              </center>
+            </td>
+            <td>
+              <center>
+                {{dataValues.Group.dataValues.group_abbr}}
+              </center>
+            </td>
+            <td style="text-align: right">
+              {{#convertTime dataValues.valid_to}}{{/convertTime}}
+            </td>
+            <td style="text-align: right">
+              {{#remainDays dataValues.valid_to}}{{/remainDays}}
+              Hari
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </div>

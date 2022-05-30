@@ -1,36 +1,36 @@
-const express = require("express")
+const express = require("express");
 // const Handlebars = require('handlebars')
-const hbs = require("express-handlebars")
+const hbs = require("express-handlebars");
 // const {allowInsecurePrototypeAccess} = require('@handlebars/allow-prototype-access')
-const bodyParser = require("body-parser")
-const cookieParser = require("cookie-parser")
-const session = require("express-session")
-const csurf = require("csurf")
-const helmet = require("helmet")
-const LocalStrategy = require("passport-local").Strategy
-const passport = require("passport")
-const db = require("./config/db")(session)
-const { Op } = require("sequelize")
-const path = require("path")
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const session = require("express-session");
+const csurf = require("csurf");
+const helmet = require("helmet");
+const LocalStrategy = require("passport-local").Strategy;
+const passport = require("passport");
+const db = require("./config/db")(session);
+const { Op } = require("sequelize");
+const path = require("path");
 
-const moment = require("moment")
-const BASEURL = "../dashboard"
+const moment = require("moment");
+const BASEURL = "../dashboard";
 
-const sslChecker = require("ssl-checker")
-const getSslDetails = async (hostname) => await sslChecker(hostname)
+const sslChecker = require("ssl-checker");
+const getSslDetails = async (hostname) => await sslChecker(hostname);
 
-const PORT = process.env.PORT || 4008
+const PORT = process.env.PORT || 4008;
 
 // Load Model
-const GroupModel = require("./models/group")
-const ProductModel = require("./models/product")
+const GroupModel = require("./models/group");
+const ProductModel = require("./models/product");
 
-GroupModel.hasMany(ProductModel, { foreignKey: "id_function" })
-ProductModel.belongsTo(GroupModel, { foreignKey: "id_function" })
+GroupModel.hasMany(ProductModel, { foreignKey: "id_function" });
+ProductModel.belongsTo(GroupModel, { foreignKey: "id_function" });
 
 // express app
-const app = express()
-app.set("view engine", "hbs")
+const app = express();
+app.set("view engine", "hbs");
 app.engine(
   "hbs",
   hbs({
@@ -41,12 +41,12 @@ app.engine(
     layoutsDir: __dirname + "/views/layouts/",
     partialsDir: __dirname + "/views/partials/",
   })
-)
-app.use(cookieParser())
+);
+app.use(cookieParser());
 // app.use(express.static('public'))
-app.use(express.static(path.join(__dirname, "public")))
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.static(path.join(__dirname, "public")));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(
   session({
@@ -55,66 +55,66 @@ app.use(
     resave: false,
     saveUninitialized: true,
   })
-)
+);
 
 // security
-const csrf = csurf({ cookie: true })
-app.use(helmet())
-app.use(csrf)
+const csrf = csurf({ cookie: true });
+app.use(helmet());
+app.use(csrf);
 app.use((err, req, res, next) => {
-  if (err.code !== "EBADCSRFTOKEN") return next(err)
-  res.status(403).render("error", { message: "Invalid form submission!" })
-})
+  if (err.code !== "EBADCSRFTOKEN") return next(err);
+  res.status(403).render("error", { message: "Invalid form submission!" });
+});
 
 // passport
-app.use(passport.initialize())
-app.use(passport.session())
-const passportConfig = { failureRedirect: "/login" }
+app.use(passport.initialize());
+app.use(passport.session());
+const passportConfig = { failureRedirect: "/login" };
 
 const authRequired = (req, res, next) => {
-  if (req.user) return next()
-  else res.redirect("/login?required=1")
-}
+  if (req.user) return next();
+  else res.redirect("/login?required=1");
+};
 
 app.use((req, res, next) => {
-  res.locals.baseUrl = BASEURL
-  res.locals.user = req.user
-  res.locals.isLoggedIn = req.user && req.user.uid > 0
-  next()
-})
+  res.locals.baseUrl = BASEURL;
+  res.locals.user = req.user;
+  res.locals.isLoggedIn = req.user && req.user.uid > 0;
+  next();
+});
 
 passport.use(
   new LocalStrategy((username, password, done) => {
     db.getUserByUsername(username)
       .then(async (user) => {
-        if (!user) return done(new Error("User not found!"), false)
+        if (!user) return done(new Error("User not found!"), false);
         if (!(await db.isPasswordHashVerified(user.password_hash, password)))
-          return done(new Error("Invalid Password"), false)
-        return done(null, user)
+          return done(new Error("Invalid Password"), false);
+        return done(null, user);
       })
       .catch((err) => {
-        return done(err)
-      })
+        return done(err);
+      });
   })
-)
+);
 
 passport.serializeUser((user, cb) => {
-  cb(null, user.uid)
-})
+  cb(null, user.uid);
+});
 
 passport.deserializeUser((uid, cb) => {
   db.getUserById(uid)
     .then((user) => {
-      cb(null, user)
+      cb(null, user);
     })
     .catch((err) => {
-      cb(err, null)
-    })
-})
+      cb(err, null);
+    });
+});
 
 app.get("/hit/:url", (req, res) => {
   try {
-    let urlHit = `${req.params.url}`
+    let urlHit = `${req.params.url}`;
     sslChecker(urlHit, {
       method: "GET",
       port: 443,
@@ -125,46 +125,46 @@ app.get("/hit/:url", (req, res) => {
         url: urlHit,
         result: result,
       })
-    )
+    );
   } catch (error) {
-      res.status(404).send(error)
+    res.status(404).send(error);
   }
-})
+});
 
 /* Routes */
 
 app.get("/", (req, res) => {
-  res.redirect("/login")
+  res.redirect("/login");
   // res.render('partials/client/index')
   console.log(
     `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-  )
-})
+  );
+});
 
 app.get("/r", (req, res) => {
   console.log(
     `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-  )
-  res.render("register-success")
-})
+  );
+  res.render("register-success");
+});
 
 app.get("/dashboard/summary", authRequired, async (req, res) => {
-  const countGroups = await GroupModel.count()
-  const countApps = await ProductModel.count()
+  const countGroups = await GroupModel.count();
+  const countApps = await ProductModel.count();
   const countOngo = await ProductModel.count({
     where: {
       days_remain: {
         [Op.gt]: 60,
       },
     },
-  })
+  });
   const countWarn = await ProductModel.count({
     where: {
       days_remain: {
         [Op.lte]: 60,
       },
     },
-  })
+  });
   const joinProduct = await ProductModel.findAndCountAll({
     include: [
       {
@@ -176,11 +176,11 @@ app.get("/dashboard/summary", authRequired, async (req, res) => {
     products.rows.forEach((element) => {
       let now = moment(new Date()),
         end = moment(element.valid_to),
-        days = end.diff(now, "days")
-      element.hitung_hari = days
-    })
-    return products
-  })
+        days = end.diff(now, "days");
+      element.hitung_hari = days;
+    });
+    return products;
+  });
 
   // console.log(joinProduct)
 
@@ -197,13 +197,13 @@ app.get("/dashboard/summary", authRequired, async (req, res) => {
     countOngo: countOngo,
     countWarn: countWarn,
     allProducts: joinProduct,
-  })
+  });
   console.log(
     `username ${req.user.username} at ${req.protocol}://${req.get("host")}${
       req.originalUrl
     }`
-  )
-})
+  );
+});
 
 app.get("/dashboard/watchlist", authRequired, async (req, res) => {
   const joinProduct = await ProductModel.findAll({
@@ -219,8 +219,8 @@ app.get("/dashboard/watchlist", authRequired, async (req, res) => {
       },
     },
   }).then((products) => {
-    return products
-  })
+    return products;
+  });
 
   res.render("partials/dashboard/component/watchlist", {
     isWatchlist: true,
@@ -231,22 +231,22 @@ app.get("/dashboard/watchlist", authRequired, async (req, res) => {
       email: res.locals.user.email,
     },
     allProducts: joinProduct,
-  })
+  });
   console.log(
     `username ${req.user.username} at ${req.protocol}://${req.get("host")}${
       req.originalUrl
     }`
-  )
-})
+  );
+});
 
 app.get("/dashboard/function", authRequired, async (req, res) => {
   console.log(
     `username ${req.user.username} at ${req.protocol}://${req.get("host")}${
       req.originalUrl
     }`
-  )
+  );
 
-  const allGroups = await GroupModel.findAll()
+  const allGroups = await GroupModel.findAll();
 
   res.render("partials/dashboard/component/function", {
     isFunction: true,
@@ -257,15 +257,15 @@ app.get("/dashboard/function", authRequired, async (req, res) => {
       email: res.locals.user.email,
     },
     allGroups: allGroups,
-  })
-})
+  });
+});
 
 app.get("/dashboard/application", authRequired, async (req, res) => {
   console.log(
     `username ${req.user.username} at ${req.protocol}://${req.get("host")}${
       req.originalUrl
     }`
-  )
+  );
 
   const joinProduct = await ProductModel.findAll({
     include: [
@@ -278,38 +278,38 @@ app.get("/dashboard/application", authRequired, async (req, res) => {
     products.forEach((element) => {
       let now = moment(new Date()),
         end = moment(element.valid_to),
-        days = end.diff(now, "days")
-      element.hitung_hari = days
-    })
-    return products
-  })
+        days = end.diff(now, "days");
+      element.hitung_hari = days;
+    });
+    return products;
+  });
 
   if (req.query.getSSL) {
     const productByID = await ProductModel.findByPk(
       parseInt(req.query.getSSL)
     ).then((results) => {
-      return results
-    })
+      return results;
+    });
 
     const getSSL = await sslChecker(productByID.domain, {
       method: "GET",
       port: 443,
     })
       .then(async (result) => {
-        console.log(result)
-        productByID.days_remain = result.daysRemaining
-        productByID.valid_from = new Date(result.validFrom)
-        productByID.valid_to = new Date(result.validTo)
-        productByID.updatedAt = new Date()
-        await productByID.save()
-        return result
+        console.log(result);
+        productByID.days_remain = result.daysRemaining;
+        productByID.valid_from = new Date(result.validFrom);
+        productByID.valid_to = new Date(result.validTo);
+        productByID.updatedAt = new Date();
+        await productByID.save();
+        return result;
       })
       .catch((error) => {
-        res.redirect("back")
-      })
+        res.redirect("back");
+      });
 
-    dateFrom = new Date(getSSL.validFrom).toLocaleString("id-ID")
-    dateTo = new Date(getSSL.validTo).toLocaleString("id-ID")
+    dateFrom = new Date(getSSL.validFrom).toLocaleString("id-ID");
+    dateTo = new Date(getSSL.validTo).toLocaleString("id-ID");
 
     res.render("partials/dashboard/component/application", {
       isApplication: true,
@@ -325,7 +325,7 @@ app.get("/dashboard/application", authRequired, async (req, res) => {
       dariTanggal: dateFrom,
       sampaiTanggal: dateTo,
       namaDomain: productByID.domain,
-    })
+    });
   } else {
     res.render("partials/dashboard/component/application", {
       isApplication: true,
@@ -337,21 +337,21 @@ app.get("/dashboard/application", authRequired, async (req, res) => {
       },
       allProducts: joinProduct,
       hasSSL: false,
-    })
+    });
   }
-})
+});
 
 app.get("/dashboard/application/:id", authRequired, async (req, res) => {
   console.log(
     `username ${req.user.username} at ${req.protocol}://${req.get("host")}${
       req.originalUrl
     }`
-  )
+  );
   const productByID = await ProductModel.findByPk(parseInt(req.params.id)).then(
     (results) => {
-      return results
+      return results;
     }
-  )
+  );
 
   res.render("partials/dashboard/component/application-details", {
     isApplication: true,
@@ -362,29 +362,29 @@ app.get("/dashboard/application/:id", authRequired, async (req, res) => {
       email: res.locals.user.email,
     },
     product: productByID,
-  })
-})
+  });
+});
 
 app.all("/login", (req, res, next) => {
   new Promise((resolve, reject) => {
     if (req.method === "GET") {
-      return reject()
+      return reject();
     }
     if (req.body.username && req.body.password) {
       passport.authenticate("local", (err, user, info) => {
         if (!err && user) {
-          return resolve(user)
+          return resolve(user);
         }
         console.log(
           `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-        )
-        reject(err)
-      })(req, res, next)
+        );
+        reject(err);
+      })(req, res, next);
     } else {
       console.log(
         `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-      )
-      reject(new Error("Please fill all fields"))
+      );
+      reject(new Error("Please fill all fields"));
     }
   })
     .then(
@@ -392,22 +392,22 @@ app.all("/login", (req, res, next) => {
         new Promise((resolve, reject) => {
           req.login(user, (err) => {
             // save authentication
-            if (err) return reject(err)
+            if (err) return reject(err);
             console.log(
               `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-            )
+            );
             return res.send(
               '<script>location.href="/dashboard/summary"</script>'
-            )
-          })
+            );
+          });
         })
     )
     .catch((error) => {
-      let errorMsg = (error && error.message) || ""
-      if (!error && req.query.required) errorMsg = "Authentication required"
+      let errorMsg = (error && error.message) || "";
+      if (!error && req.query.required) errorMsg = "Authentication required";
       console.log(
         `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-      )
+      );
       res.render("partials/client/component/login", {
         csrfToken: req.csrfToken(),
         hasError: errorMsg && errorMsg.length > 0,
@@ -415,9 +415,9 @@ app.all("/login", (req, res, next) => {
         form: req.body,
         notRegister: true,
         stateMuted: "text-muted",
-      })
-    })
-})
+      });
+    });
+});
 
 app.all("/register", (req, res) => {
   new Promise(async (resolve, reject) => {
@@ -431,8 +431,8 @@ app.all("/register", (req, res) => {
       ) {
         console.log(
           `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-        )
-        reject("Please fill all fields")
+        );
+        reject("Please fill all fields");
       } else if (
         !(
           req.body.email.indexOf("@") !== -1 &&
@@ -441,34 +441,34 @@ app.all("/register", (req, res) => {
       ) {
         console.log(
           `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-        )
-        reject("Invalid email address")
+        );
+        reject("Invalid email address");
       } else if (req.body.password !== req.body.password2) {
         console.log(
           `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-        )
-        reject("Password don't match")
+        );
+        reject("Password don't match");
       } else if (await db.isUsernameInUse(req.body.username)) {
         console.log(
           `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-        )
-        reject("Username is taken")
+        );
+        reject("Username is taken");
       } else if (await db.isEmailInUse(req.body.email)) {
         console.log(
           `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-        )
-        reject("Email address is already registered")
+        );
+        reject("Email address is already registered");
       } else {
         console.log(
           `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-        )
-        resolve(true)
+        );
+        resolve(true);
       }
     } else {
       console.log(
         `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-      )
-      resolve(false)
+      );
+      resolve(false);
     }
   })
     .then(
@@ -488,15 +488,15 @@ app.all("/register", (req, res) => {
                   `you're at ${req.protocol}://${req.get("host")}${
                     req.originalUrl
                   }`
-                )
-                resolve(createdUser)
+                );
+                resolve(createdUser);
               })
-              .catch((err) => reject(err))
+              .catch((err) => reject(err));
           } else {
             console.log(
               `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-            )
-            resolve(false)
+            );
+            resolve(false);
           }
         })
     )
@@ -504,23 +504,23 @@ app.all("/register", (req, res) => {
       if (createdUserRecord) {
         // Log them in in the session
         req.login(createdUserRecord, (err) => {
-          console.log(err)
-        })
+          console.log(err);
+        });
         console.log(
           `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-        )
-        res.render("partials/client/component/register-success")
+        );
+        res.render("partials/client/component/register-success");
       } else {
         console.log(
           `you're at ${req.protocol}://${req.get("host")}${req.originalUrl}`
-        )
+        );
         res.render("partials/client/component/register", {
           csrfToken: req.csrfToken(),
           hasError: false,
           form: req.body,
           notLogin: true,
           stateMuted: "text-muted",
-        })
+        });
       }
     })
     .catch((error) => {
@@ -530,15 +530,15 @@ app.all("/register", (req, res) => {
         hasError: true,
         error,
         form: req.body,
-      })
-    })
-})
+      });
+    });
+});
 
 app.get("/logout", authRequired, (req, res) => {
-  req.logout()
-  console.log("Last User has been Ejected")
-  return res.send('<script>location.href="/"</script>')
-})
+  req.logout();
+  console.log("Last User has been Ejected");
+  return res.send('<script>location.href="/"</script>');
+});
 
 // App start
-app.listen(PORT, () => console.log(`App listening on port ${PORT}!`))
+app.listen(PORT, () => console.log(`App listening on port ${PORT}!`));

@@ -1,5 +1,5 @@
 <script>
-    $(document).ready(function () {
+  $(document).ready(function () {
         $('#dt-function').DataTable({
             'paging': true,
             'lengthChange': true,
@@ -12,47 +12,99 @@
 </script>
 
 <div class="card">
-    {{!-- <div class="card-header bg-transparent">
+  {{! <div class="card-header bg-transparent">
         <h3 class="mb-0">Icons</h3>
-    </div> --}}
-    <div class="card-body">
-            <table id="dt-function" class="table align-items-center table-flush" style="width:100%">
-                <thead>
-                    <tr>
-                        <th><center>No.</center></th>
-                        <th><center>Nama</center></th>
-                        <th><center>Desc</center></th>
-                        <th><center>Div</center></th>
-                        <th><center>isGroup</center></th>
-                        <th><center>isDTO</center></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each allGroups}}
-                    <tr>
-                        <td><center>{{dataValues.id}}</center></td>
-                        <td><center>{{dataValues.group_abbr}}</center></td>
-                        <td>{{dataValues.group_full}}</td>
-                        <td><center>{{dataValues.group_div}}</center></td>
-                        <td><center>
-                            {{#ifCond dataValues.group_is_group '0'}}
-                                <span class="badge badge-pill badge-info">Div</span>
-                            {{else}}
-                                <span class="badge badge-pill badge-default">Group/Team</span>
-                            {{/ifCond}}
-                            </center>
-                        </td>
-                        <td><center>
-                            {{#ifCond dataValues.group_is_dto '0'}}
-                                <span class="badge badge-pill badge-warning">Non DTO</span>
-                            {{else}}
-                                <span class="badge badge-pill badge-secondary">DTO</span>
-                            {{/ifCond}}
-                            </center>
-                        </td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-    </div>
+    </div> }}
+  <div class="card-body">
+    <table
+      id="dt-function"
+      class="table align-items-center table-flush"
+      style="width:100%"
+    >
+      <thead>
+        <tr>
+          <th>
+            <center>
+              No.
+            </center>
+          </th>
+          <th>
+            <center>
+              Nama
+            </center>
+          </th>
+          <th>
+            <center>
+              Desc
+            </center>
+          </th>
+          <th>
+            <center>
+              Div
+            </center>
+          </th>
+          <th>
+            <center>
+              isGroup
+            </center>
+          </th>
+          <th>
+            <center>
+              isDTO
+            </center>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each allGroups}}
+          <tr>
+            <td>
+              <center>
+                {{dataValues.id}}
+              </center>
+            </td>
+            <td>
+              <center>
+                {{dataValues.group_abbr}}
+              </center>
+            </td>
+            <td>
+              {{dataValues.group_full}}
+            </td>
+            <td>
+              <center>
+                {{dataValues.group_div}}
+              </center>
+            </td>
+            <td>
+              <center>
+                {{#ifCond dataValues.group_is_group "0"}}
+                  <span class="badge badge-pill badge-info">
+                    Div
+                  </span>
+                {{else}}
+                  <span class="badge badge-pill badge-default">
+                    Group/Team
+                  </span>
+                {{/ifCond}}
+              </center>
+            </td>
+            <td>
+              <center>
+                {{#ifCond dataValues.group_is_dto "0"}}
+                  <span class="badge badge-pill badge-warning">
+                    Non DTO
+                  </span>
+                {{else}}
+                  <span class="badge badge-pill badge-secondary">
+                    DTO
+                  </span>
+                {{/ifCond}}
+              </center>
+            </td>
+          </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
 </div>
